@@ -1,0 +1,107 @@
+.Dd October 6, 2015
+.Dt TPM 1
+.Os
+.Sh NAME
+.Nm tpm
+.Nd tiny password manager
+.Sh SYNOPSIS
+.Nm
+{
+.Cm insert
+|
+.Cm show
+}
+.Ar entry
+.Sh DESCRIPTION
+.Nm
+is a tiny shell script which is heavily inspired and largely compatible with
+.Xr pass 1 .
+Just like
+.Xr pass 1 it uses
+.Xr gpg2 1 to securely store your passwords.
+The major difference between
+.Xr pass 1 and
+.Nm
+is that the latter is a lot more minimal. Furthermore,
+.Nm
+has been written to only rely on
+.St -p1003.1
+shell features.
+.Pp
+Invoking
+.Nm
+consists of specifying a command either
+.Cm insert
+or
+.Cm show
+and supplying one
+.Ar entry
+as a target.
+If
+.Cm insert
+is specified as a command
+.Nm tpm
+will create a new
+.Ar entry
+and prompt for the corresponding password.
+If you specify
+.Cm show
+as a command
+.Nm
+will write the password for the given
+.Ar entry
+to standard output.
+.Sh ENVIRONMENT
+.Bl -tag -width Ds
+.It Ev PASSWORD_STORE_DIR
+The storage directory
+.Pq default: Pa ~/.password-store .
+.It Ev PASSWORD_STORE_KEY
+PGP key to encrypt files with
+.Pq default: self .
+.El
+.Sh FILES
+.Bl -tag -width Ds
+.It Pa ~/.password-store
+The default storage directory.
+.It Pa ~/.password-store/.gpg-id
+Provided for compatibility with pass(1).
+.El
+.Sh EXIT STATUS
+.Ex -std
+.Sh EXAMPLES
+Create a new
+.Ar entry
+with a random password using
+.Xr pwgen 1 :
+.Bd -literal -offset indent
+$ pwgen -1 | tpm insert system/new-user
+.Ed
+.Pp
+Create a new
+.Ar entry
+called
+.Qq system/root :
+.Bd -literal -offset indent
+$ tpm insert system/root
+.Ed
+.Pp
+Write your
+.Qq system/root
+password to standard output:
+.Bd -literal -offset indent
+$ tpm show system/root
+.Ed
+.Pp
+Copy your
+.Qq system/root
+password to the clipboard using
+.Xr xclip 1 :
+.Bd -literal -offset indent
+$ tpm show system/root | tr -d '\en' | xclip
+.Ed
+.Sh SEE ALSO
+.Xr gpg2 1 ,
+.Xr pass 1 ,
+.Xr pwgen 1,
+.Xr xclip 1
